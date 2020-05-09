@@ -1,23 +1,20 @@
-'use strict';
-
+// Import Express to be used as a web framework
+// and Mongoose to connect to a MongoDB service.
 const express = require('express');
 const mongoose = require('mongoose');
-const PORT = 8081;
-const HOST = '0.0.0.0';
 
-mongoose.connect(
-  'mongodb://mongo/test-express',
-  { useNewUrlParser: true }
-)
-.then(() => {
-  const app = express();
+const PORT = 8081;// Can be any port, but it has to match the Docker exposed ports.
+const HOST = '0.0.0.0';// Localhost
+const MONGO_URL = 'mongodb://mongo/test-express';// Url to the mongo container and test-express database.
 
-  app.get('/', (req, res) =>{
-      res.send("Hello world!!");   
+mongoose.connect(MONGO_URL, { useNewUrlParser: true })
+  .then(() => {
+    const app = express();
+
+    app.get('/', (req, res) => res.send("Hello world!!"));
+
+    app.listen(PORT, HOST);
+
+    console.log(`Running on http://${HOST}:${PORT}`);
   })
-
-  app.listen(PORT, HOST);
-
-  console.log(`Running on http://${HOST}:${PORT}`);
-})
-.catch(err => console.log(err));
+  .catch(console.error);
